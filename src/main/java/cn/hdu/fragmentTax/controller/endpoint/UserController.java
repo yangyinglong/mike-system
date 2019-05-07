@@ -1,14 +1,18 @@
 package cn.hdu.fragmentTax.controller.endpoint;
 
 
+import cn.hdu.fragmentTax.dao.entity.PasswordsEntity;
 import cn.hdu.fragmentTax.dao.entity.UsersEntity;
 import cn.hdu.fragmentTax.dao.mapper.IPasswordsMapper;
 import cn.hdu.fragmentTax.dao.mapper.IUsersMapper;
+import cn.hdu.fragmentTax.model.request.ChangePasswordRequ;
 import cn.hdu.fragmentTax.model.request.LoginRequ;
 import cn.hdu.fragmentTax.model.request.RegisterRequ;
 import cn.hdu.fragmentTax.model.response.LoginResp;
 import cn.hdu.fragmentTax.service.IUserService;
 import cn.hdu.fragmentTax.utils.FormatUtil;
+import cn.hdu.fragmentTax.utils.MD5;
+import cn.hdu.fragmentTax.utils.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,6 +36,7 @@ public class UserController {
 
     @Autowired
     private IPasswordsMapper passwordsMapper;
+
 
     /**
      * 注册
@@ -84,5 +89,43 @@ public class UserController {
             resp.put("r", "数据库异常，请联系管理员");
         }
         return  resp;
+    }
+
+
+    @Path("/passwordChange")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Object> passwordChange(ChangePasswordRequ changePasswordRequ) {
+        Map<String, Object> resp = new HashMap<>();
+        // 验证token
+        if (! userService.tokenVerify(changePasswordRequ.getPhone(), changePasswordRequ.getToken())) {
+            resp.put("c", 304);
+            resp.put("r", "请登录");
+            return resp;
+        }
+        // 判断用户是否存在
+        UsersEntity userEntity = usersMapper.queryByPhone(changePasswordRequ.getPhone());
+        if (FormatUtil.isEmpty(userEntity)) {
+            resp.put("c", 302);
+            resp.put("r", "该号码未注册");
+            return resp;
+        }
+        // 验证密码是否正确
+        PasswordsEntity passwordEntity = passwordsMapper.queryByUserId(userEntity.getId());
+        if (MD5.verify(changePasswordRequ.getOldPassword(), PropertiesUtil.prop("token_key"), passwordEntity.getToken())) {
+            // 修改密码
+            if (userService.passwordChange(userEntity.getId(), changePasswordRequ.getNewPassword())) {
+                resp.put("c", 200);
+                resp.put("r", "修改成功");
+            } else {
+                resp.put("c", 401);
+                resp.put("r", "数据库异常，请联系管理员");
+            }
+
+        } else {
+            resp.put("c", 303);
+            resp.put("r", "原密码错误");
+        }
+        return resp;
     }
 }

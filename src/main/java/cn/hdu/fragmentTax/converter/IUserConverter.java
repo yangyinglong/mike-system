@@ -8,7 +8,7 @@ import cn.hdu.fragmentTax.model.response.LoginResp;
 public interface IUserConverter {
     UsersEntity createUsersEntity(RegisterRequ registerRequ);
 
-    PasswordsEntity createPasswordsEntity(RegisterRequ registerRequ, UsersEntity usersEntity) throws Exception;
+    PasswordsEntity createPasswordEntity(RegisterRequ registerRequ, UsersEntity usersEntity) throws Exception;
 
     LoginResp createLoginResp(UsersEntity usersEntity);
 }

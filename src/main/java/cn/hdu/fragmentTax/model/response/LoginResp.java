@@ -4,6 +4,7 @@ public class LoginResp {
     private String name;
     private String phone;
     private Integer state;
+    private String token;
 
     public LoginResp() {
     }
@@ -30,5 +31,13 @@ public class LoginResp {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

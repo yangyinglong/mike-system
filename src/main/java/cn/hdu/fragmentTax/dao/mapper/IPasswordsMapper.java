@@ -41,4 +41,7 @@ public interface IPasswordsMapper {
             @Result(property = "token", column = "token")
     })
     PasswordsEntity queryByUserId(@Param("userId") Integer userId);
+
+    @Update("UPDATE `passwords` SET token=#{token} WHERE `user_id` = #{userId}")
+    void updateTokenByUserId(@Param("userId") Integer userId, @Param("token") String token);
 }
