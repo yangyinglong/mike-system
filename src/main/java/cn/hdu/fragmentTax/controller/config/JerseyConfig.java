@@ -1,5 +1,6 @@
 package cn.hdu.fragmentTax.controller.config;
 
+import cn.hdu.fragmentTax.controller.endpoint.OrderController;
 import cn.hdu.fragmentTax.controller.endpoint.UserController;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -17,6 +18,7 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         register(MultiPartFeature.class);
         register(UserController.class);
+        register(OrderController.class);
 
     }
 //

@@ -16,4 +16,6 @@ public interface IUserService {
     Boolean tokenVerify(String phone, String token);
 
     Boolean passwordChange(Integer userId, String newPassword);
+
+    LoginResp adminLogin();
 }

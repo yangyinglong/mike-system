@@ -3,9 +3,7 @@ package cn.hdu.fragmentTax.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class DateUtil {
 
@@ -231,8 +229,43 @@ public class DateUtil {
         return defaultFormat.format(date);
     }
 
+    /**
+     * 获取两个日期之间的日期
+     * @param start 开始日期
+     * @param end 结束日期
+     * @return 日期集合
+     */
+    public static List<Date> getBetweenDates(Date start, Date end, int interval) {
+        List<Date> result = new ArrayList<Date>();
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(start);
+//        tempStart.add(Calendar.DAY_OF_YEAR, 1);
+
+        Calendar tempEnd = Calendar.getInstance();
+        tempEnd.setTime(end);
+        tempEnd.add(Calendar.DAY_OF_YEAR, 1);
+        while (tempStart.before(tempEnd)) {
+            result.add(tempStart.getTime());
+            tempStart.add(Calendar.DAY_OF_YEAR, interval);
+        }
+        return result;
+    }
+
+    public static List<String> getBetweenDatesForString(Date start, Date end, int interval){
+        List<Date> result = getBetweenDates(start, end, interval);
+        List<String> strings = new ArrayList<String>();
+        for (Date date : result) {
+            strings.add(getLongStrFromDate(date).split(" ")[0]);
+        }
+        return strings;
+    }
+
     public static void main(String[] args) throws ParseException {
-        String data = getChinaDateTime("2018-12-04T16:00:00.000Z");
-        System.out.println(data);
+        Date date1 = getDateFromString("2019-05-05");
+        Date date2 = getDateFromString("2019-05-09");
+        List<String> result = getBetweenDatesForString(date1, date2, 2);
+        for (String date : result) {
+            System.out.println(date);
+        }
     }
 }

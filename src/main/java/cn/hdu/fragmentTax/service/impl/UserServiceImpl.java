@@ -87,4 +87,14 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    @Override
+    public LoginResp adminLogin() {
+        LoginResp loginResp = new LoginResp();
+        loginResp.setPhone("00000");
+        loginResp.setToken("heluMikeAdmin");
+        loginResp.setName("荷鹭牛奶");
+        loginResp.setState(2);
+        return loginResp;
+    }
+
 }
